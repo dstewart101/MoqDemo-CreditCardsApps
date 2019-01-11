@@ -8,7 +8,7 @@ namespace CreditCardApplications.Tests
         [Fact]
         public void AcceptHighIncomeApplications()
         {
-            var sut = new CreditCardApplicationEvaluator();
+            var sut = new CreditCardApplicationEvaluator(null);
             var application = new CreditCardApplication
             {
                 GrossAnnualIncome = 100000
@@ -23,7 +23,7 @@ namespace CreditCardApplications.Tests
         [Fact]
         public void ReferYoungApplicants()
         {
-            var sut = new CreditCardApplicationEvaluator();
+            var sut = new CreditCardApplicationEvaluator(null);
             var application = new CreditCardApplication
             {
                 Age = 19
