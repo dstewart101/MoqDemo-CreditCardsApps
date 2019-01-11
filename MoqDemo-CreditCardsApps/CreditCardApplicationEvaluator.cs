@@ -10,7 +10,7 @@
 
         public CreditCardApplicationEvaluator(IFrequentFlyerNumberValidator frequentFlyerNumberValidator)
         {
-            _frequentFlyerNumberValidator = frequentFlyerNumberValidator;
+            _frequentFlyerNumberValidator = frequentFlyerNumberValidator ?? throw new System.ArgumentNullException(nameof(_frequentFlyerNumberValidator));
         }
      
         public CreditCardApplicationDecision Evaluate(CreditCardApplication application)
