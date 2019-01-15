@@ -1,5 +1,6 @@
 using Moq;
 using System;
+using System.Text.RegularExpressions;
 using Xunit;
 
 namespace CreditCardApplications.Tests
@@ -49,8 +50,12 @@ namespace CreditCardApplications.Tests
             Mock<IFrequentFlyerNumberValidator> mockFrequentFlyerNumber =
                 new Mock<IFrequentFlyerNumberValidator>();
 
-            mockFrequentFlyerNumber.Setup(x => x.IsValid("x")).Returns(true);
+            //mockFrequentFlyerNumber.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
+            //mockFrequentFlyerNumber.Setup(x => x.IsValid(It.Is<string>(number => number.StartsWith("x")))).Returns(true);
+            //mockFrequentFlyerNumber.Setup(x => x.IsValid(It.IsIn("x","y","z"))).Returns(true);
+            //mockFrequentFlyerNumber.Setup(x => x.IsValid(It.IsInRange("a", "z", Range.Inclusive))).Returns(true);
 
+            mockFrequentFlyerNumber.Setup(x => x.IsValid(It.IsRegex("[a-z]", RegexOptions.None))).Returns(true);
             var sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumber.Object);
 
 
@@ -58,7 +63,7 @@ namespace CreditCardApplications.Tests
             {
                 Age = 42,
                 GrossAnnualIncome = 19999,
-                FrequentFlyerNumber = "x"
+                FrequentFlyerNumber = "a"
             };
 
             CreditCardApplicationDecision decision = sut.Evaluate(application);
