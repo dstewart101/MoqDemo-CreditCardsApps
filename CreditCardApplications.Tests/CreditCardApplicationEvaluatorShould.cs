@@ -32,6 +32,7 @@ namespace CreditCardApplications.Tests
             Mock<IFrequentFlyerNumberValidator> mockFrequentFlyerNumber =
                 new Mock<IFrequentFlyerNumberValidator>();
 
+            mockFrequentFlyerNumber.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
             var sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumber.Object);
 
       
