@@ -69,5 +69,24 @@ namespace CreditCardApplications.Tests
             CreditCardApplicationDecision decision = sut.Evaluate(application);
             Assert.Equal(CreditCardApplicationDecision.AutoDeclined, decision);
         }
+
+
+        [Fact]
+        public void ReferInvalidFrequentFlyerApplications()
+        {
+            Mock<IFrequentFlyerNumberValidator> mockFrequentFlyerNumber =
+                new Mock<IFrequentFlyerNumberValidator>(MockBehavior.Strict);
+
+            mockFrequentFlyerNumber.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
+
+            var sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumber.Object);
+
+
+            var application = new CreditCardApplication();
+
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, decision);
+        }
     }
 }
