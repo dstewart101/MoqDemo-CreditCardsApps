@@ -33,6 +33,8 @@ namespace CreditCardApplications.Tests
                 new Mock<IFrequentFlyerNumberValidator>();
 
             mockFrequentFlyerNumber.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
+            //mockFrequentFlyerNumber.Setup(x => x.ServiceInformation.License.LicenseKey);
+            mockFrequentFlyerNumber.DefaultValue = DefaultValue.Mock;
             var sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumber.Object);
 
       
@@ -57,6 +59,7 @@ namespace CreditCardApplications.Tests
             //mockFrequentFlyerNumber.Setup(x => x.IsValid(It.IsInRange("a", "z", Range.Inclusive))).Returns(true);
 
             mockFrequentFlyerNumber.Setup(x => x.IsValid(It.IsRegex("[a-z]", RegexOptions.None))).Returns(true);
+            mockFrequentFlyerNumber.DefaultValue = DefaultValue.Mock;
             var sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumber.Object);
 
 
@@ -73,41 +76,41 @@ namespace CreditCardApplications.Tests
 
 
         [Fact]
-        //public void ReferInvalidFrequentFlyerApplications()
-        //{
-        //    Mock<IFrequentFlyerNumberValidator> mockFrequentFlyerNumber =
-        //        new Mock<IFrequentFlyerNumberValidator>(MockBehavior.Strict);
+        public void ReferInvalidFrequentFlyerApplications()
+        {
+            Mock<IFrequentFlyerNumberValidator> mockFrequentFlyerNumber =
+                new Mock<IFrequentFlyerNumberValidator>(MockBehavior.Strict);
 
-        //    mockFrequentFlyerNumber.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
-        //    mockFrequentFlyerNumber.Setup(x => x.LicenseKey).Returns("GRAND");
+            mockFrequentFlyerNumber.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
+            mockFrequentFlyerNumber.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("GRAND");
+            
+            var sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumber.Object);
 
-        //    var sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumber.Object);
 
+            var application = new CreditCardApplication();
 
-        //    var application = new CreditCardApplication();
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
 
-        //    CreditCardApplicationDecision decision = sut.Evaluate(application);
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, decision);
+        }
 
-        //    Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, decision);
-        //}
+        [Fact]
+        public void ReferExpiredLicense()
+        {
+            Mock<IFrequentFlyerNumberValidator> mockFrequentFlyerNumber =
+                new Mock<IFrequentFlyerNumberValidator>();
 
-        //[Fact]
-        //public void ReferExpiredLicense()
-        //{
-        //    Mock<IFrequentFlyerNumberValidator> mockFrequentFlyerNumber =
-        //        new Mock<IFrequentFlyerNumberValidator>();
+            mockFrequentFlyerNumber.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
+            mockFrequentFlyerNumber.Setup(x => x.ServiceInformation.License.LicenseKey).Returns(GetLicenceExpiryString);
 
-        //    mockFrequentFlyerNumber.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
-        //    mockFrequentFlyerNumber.Setup(x => x.LicenseKey).Returns(GetLicenceExpiryString);
+            var sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumber.Object);
 
-        //    var sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumber.Object);
+            var application = new CreditCardApplication();
 
-        //    var application = new CreditCardApplication();
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
 
-        //    CreditCardApplicationDecision decision = sut.Evaluate(application);
-
-        //    Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, decision);
-        //}
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, decision);
+        }
 
         string GetLicenceExpiryString()
         {
