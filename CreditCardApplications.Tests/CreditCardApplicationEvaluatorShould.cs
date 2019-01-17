@@ -1,4 +1,5 @@
 using Moq;
+using MoqDemo_CreditCardsApps;
 using System;
 using System.Text.RegularExpressions;
 using Xunit;
@@ -110,6 +111,29 @@ namespace CreditCardApplications.Tests
             CreditCardApplicationDecision decision = sut.Evaluate(application);
 
             Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, decision);
+        }
+
+        [Fact]
+        public void DetailedValidationsForOlderCustomerApplication()
+        {
+            Mock<IFrequentFlyerNumberValidator> mockFrequentFlyerNumber =
+                new Mock<IFrequentFlyerNumberValidator>();
+
+            mockFrequentFlyerNumber.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
+            mockFrequentFlyerNumber.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("GRAND");
+            mockFrequentFlyerNumber.SetupProperty(x => x.ValidationMode);
+
+            var sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumber.Object);
+
+
+            var application = new CreditCardApplication()
+            {
+                Age = 42
+            };
+
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+
+            Assert.Equal(ValidationMode.Detailed, mockFrequentFlyerNumber.Object.ValidationMode);
         }
 
         string GetLicenceExpiryString()
