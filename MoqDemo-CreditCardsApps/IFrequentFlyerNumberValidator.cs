@@ -1,3 +1,4 @@
+using MoqDemo_CreditCardsApps;
 using System;
 
 namespace CreditCardApplications
@@ -7,6 +8,6 @@ namespace CreditCardApplications
         bool IsValid(string frequentFlyerNumber);
         void IsValid(string frequentFlyerNumber, out bool isValid);
 
-        string LicenseKey { get; }
+        IServiceInformation ServiceInformation { get; }
     }
 }

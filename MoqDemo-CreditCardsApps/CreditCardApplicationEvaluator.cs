@@ -20,7 +20,7 @@
                 return CreditCardApplicationDecision.AutoAccepted;
             }
 
-            if (_frequentFlyerNumberValidator.LicenseKey == "EXPIRED")
+            if (_frequentFlyerNumberValidator.ServiceInformation.License.LicenseKey == "EXPIRED")
             {
                 return CreditCardApplicationDecision.ReferredToHuman;
             }
