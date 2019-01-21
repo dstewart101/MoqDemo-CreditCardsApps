@@ -80,10 +80,11 @@ namespace CreditCardApplications.Tests
         public void ReferInvalidFrequentFlyerApplications()
         {
             Mock<IFrequentFlyerNumberValidator> mockFrequentFlyerNumber =
-                new Mock<IFrequentFlyerNumberValidator>(MockBehavior.Strict);
+                new Mock<IFrequentFlyerNumberValidator>();
 
             mockFrequentFlyerNumber.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
             mockFrequentFlyerNumber.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("GRAND");
+            mockFrequentFlyerNumber.Setup(x => x.ValidationMode).Returns(ValidationMode.Quick);
             
             var sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumber.Object);
 
