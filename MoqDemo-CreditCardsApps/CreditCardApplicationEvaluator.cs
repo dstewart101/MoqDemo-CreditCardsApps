@@ -13,10 +13,14 @@ namespace CreditCardApplications
 
         public int ValidatorLookupCount { get; private set; }
 
-        public CreditCardApplicationEvaluator(IFrequentFlyerNumberValidator frequentFlyerNumberValidator)
+        private readonly FraudLookup _fraudLookup;
+
+        public CreditCardApplicationEvaluator(IFrequentFlyerNumberValidator frequentFlyerNumberValidator,
+            FraudLookup fraudLookup = null)
         {
             _frequentFlyerNumberValidator = frequentFlyerNumberValidator ?? throw new System.ArgumentNullException(nameof(_frequentFlyerNumberValidator));
             _frequentFlyerNumberValidator.ValidatorLookupPerformed += ValidatorLookUpPerformed;
+            _fraudLookup = fraudLookup;
         }
 
         private void ValidatorLookUpPerformed(object sender, EventArgs e)
@@ -26,6 +30,12 @@ namespace CreditCardApplications
 
         public CreditCardApplicationDecision Evaluate(CreditCardApplication application)
         {
+
+            if (_fraudLookup != null && _fraudLookup.IsFraudRisk(application))
+            {
+                return CreditCardApplicationDecision.ReferredToHumanFraudRisk;
+            }
+
             if (application.GrossAnnualIncome >= HighIncomeThreshhold)
             {
                 return CreditCardApplicationDecision.AutoAccepted;
