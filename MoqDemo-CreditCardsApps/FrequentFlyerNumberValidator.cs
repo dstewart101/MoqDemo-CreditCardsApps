@@ -19,6 +19,8 @@ namespace CreditCardApplications
 
         public ValidationMode ValidationMode { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
+        public event EventHandler ValidatorLookupPerformed;
+
         public bool IsValid(string frequentFlyerNumber)
         {
             throw new NotImplementedException("For demo purposes");

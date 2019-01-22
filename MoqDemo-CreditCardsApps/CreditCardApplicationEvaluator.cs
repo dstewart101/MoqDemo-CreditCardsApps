@@ -1,4 +1,5 @@
-﻿using MoqDemo_CreditCardsApps;
+﻿using System;
+using MoqDemo_CreditCardsApps;
 
 namespace CreditCardApplications
 {
@@ -10,11 +11,19 @@ namespace CreditCardApplications
 
         private IFrequentFlyerNumberValidator _frequentFlyerNumberValidator;
 
+        public int ValidatorLookupCount { get; private set; }
+
         public CreditCardApplicationEvaluator(IFrequentFlyerNumberValidator frequentFlyerNumberValidator)
         {
             _frequentFlyerNumberValidator = frequentFlyerNumberValidator ?? throw new System.ArgumentNullException(nameof(_frequentFlyerNumberValidator));
+            _frequentFlyerNumberValidator.ValidatorLookupPerformed += ValidatorLookUpPerformed;
         }
-     
+
+        private void ValidatorLookUpPerformed(object sender, EventArgs e)
+        {
+            ValidatorLookupCount++;
+        }
+
         public CreditCardApplicationDecision Evaluate(CreditCardApplication application)
         {
             if (application.GrossAnnualIncome >= HighIncomeThreshhold)
