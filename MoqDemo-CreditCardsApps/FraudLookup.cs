@@ -7,7 +7,12 @@ namespace MoqDemo_CreditCardsApps
 {
     public class FraudLookup
     {
-        virtual public bool IsFraudRisk(CreditCardApplication application)
+        public bool IsFraudRisk(CreditCardApplication application)
+        {
+            return CheckApplication(application);
+        }
+
+        protected virtual bool CheckApplication(CreditCardApplication application)
         {
             if (application.LastName == "Smith")
             {
