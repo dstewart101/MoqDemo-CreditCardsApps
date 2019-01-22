@@ -141,5 +141,44 @@ namespace CreditCardApplications.Tests
         {
             return "EXPIRED";
         }
+
+        [Fact]
+        public void ShouldValidateFrequentFlyerNumberForLowIncomeApplications()
+        {
+            Mock<IFrequentFlyerNumberValidator> mockFrequentFlyerNumber =
+                new Mock<IFrequentFlyerNumberValidator>();
+
+            mockFrequentFlyerNumber.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("GRAND");
+            var sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumber.Object);
+
+
+            //var application = new CreditCardApplication
+            //{
+            //    FrequentFlyerNumber = "flyerNumber"
+            //};
+
+            var application = new CreditCardApplication();
+
+
+
+            sut.Evaluate(application);
+
+            mockFrequentFlyerNumber.Verify(x => x.IsValid(It.IsAny<string>()));
+
+        }
+
+        //[Fact]
+        //public void ShouldValidateFrequentFlyerNumberForLowIncomeApplications_CustomMessage()
+        //{
+        //    Mock<IFrequentFlyerNumberValidator> mockFrequentFlyerNumber =
+        //        new Mock<IFrequentFlyerNumberValidator>();
+
+        //    mockFrequentFlyerNumber.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("GRAND");
+        //    var sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumber.Object);
+        //    var application = new CreditCardApplication();
+
+        //    sut.Evaluate(application);
+        //    mockFrequentFlyerNumber.Verify(x => x.IsValid(It.IsNotNull<string>()), "Frequent flyer number passed should not be null");
+        //}
     }
 }
