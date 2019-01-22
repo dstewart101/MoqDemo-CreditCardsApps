@@ -215,5 +215,39 @@ namespace CreditCardApplications.Tests
             mockFrequentFlyerNumber.Verify(x => x.IsValid(It.IsAny<string>()), Times.Exactly(1)); // Times.Once
 
         }
+
+        [Fact]
+        public void CheckLicenseKeyForLowIncomeApplications()
+        {
+            Mock<IFrequentFlyerNumberValidator> mockFrequentFlyerNumber =
+                new Mock<IFrequentFlyerNumberValidator>();
+
+            mockFrequentFlyerNumber.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("OK");
+            var sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumber.Object);
+
+            var application = new CreditCardApplication { GrossAnnualIncome = 99_000};
+
+            sut.Evaluate(application);
+
+            mockFrequentFlyerNumber.VerifyGet(x => x.ServiceInformation.License.LicenseKey);
+
+        }
+
+        [Fact]
+        public void SetDetailedLookupForOlderApplications()
+        {
+            Mock<IFrequentFlyerNumberValidator> mockFrequentFlyerNumber =
+                new Mock<IFrequentFlyerNumberValidator>();
+
+            mockFrequentFlyerNumber.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("OK");
+            var sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumber.Object);
+
+            var application = new CreditCardApplication { Age = 30 };
+
+            sut.Evaluate(application);
+
+            mockFrequentFlyerNumber.VerifySet(x => x.ValidationMode = It.IsAny<ValidationMode>(), Times.Once);
+
+        }
     }
 }
