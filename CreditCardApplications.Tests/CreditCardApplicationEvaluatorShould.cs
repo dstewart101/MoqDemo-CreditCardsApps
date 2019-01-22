@@ -281,7 +281,9 @@ namespace CreditCardApplications.Tests
                 new Mock<IFrequentFlyerNumberValidator>();
 
             mockFrequentFlyerNumber.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("OK");
-            mockFrequentFlyerNumber.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
+            mockFrequentFlyerNumber.Setup(x => x.IsValid(It.IsAny<string>()))
+                .Returns(true)
+                .Raises(x => x.ValidatorLookupPerformed += null, EventArgs.Empty);
             
             
 
@@ -291,7 +293,7 @@ namespace CreditCardApplications.Tests
 
             sut.Evaluate(application);
 
-            mockFrequentFlyerNumber.Raise(x => x.ValidatorLookupPerformed += null, EventArgs.Empty);
+            //mockFrequentFlyerNumber.Raise(x => x.ValidatorLookupPerformed += null, EventArgs.Empty);
 
             Assert.Equal(1, sut.ValidatorLookupCount);
 
