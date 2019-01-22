@@ -29,9 +29,16 @@ namespace CreditCardApplications
 
             _frequentFlyerNumberValidator.ValidationMode = application.Age >= 30 ? ValidationMode.Detailed : ValidationMode.Quick;
 
-            var isValidFrequentFlyerNumber = _frequentFlyerNumberValidator.IsValid(application.FrequentFlyerNumber);
-            if (!isValidFrequentFlyerNumber)
+            bool isValidFrequentFlyerNumber;
+
+            try
             {
+                isValidFrequentFlyerNumber = _frequentFlyerNumberValidator.IsValid(application.FrequentFlyerNumber);
+            }
+
+            catch (System.Exception)
+            {
+                // log
                 return CreditCardApplicationDecision.ReferredToHuman;
             }
 
